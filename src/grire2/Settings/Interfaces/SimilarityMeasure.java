@@ -12,12 +12,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Copyright (C) 2013 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
+ *  
+ * Copyright (C) 2012 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
  */
 
-package grire2.Configuration;
+package grire2.Settings.Interfaces;
 
-public enum StorageType{
-    BINARY_FILE, MAPDB, XML
+
+public abstract class SimilarityMeasure implements GRirePlugin {
+
+    public abstract float calculate(float[] qv, float[] v);
+    public abstract SimilarityType getType();
+
+    public enum SimilarityType{
+        DISTANCE, SIMILARITY
+    }
 }

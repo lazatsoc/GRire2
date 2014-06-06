@@ -15,9 +15,23 @@
  *
  * Copyright (C) 2013 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
  */
+package grire2.Settings.Interfaces;
 
-package grire2.Configuration;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
-public enum RetrievalType{
-    GLOBAL, BAG_OF_VISUAL_WORDS
+
+public abstract class FeatureExtractor implements GRirePlugin {
+    private FeatureType _type;
+
+    public abstract float[][] extract(File img);
+    public abstract float[][] extract(BufferedImage img);
+
+    public FeatureType getType() {
+        return _type;
+    }
+
+    public enum FeatureType {
+        GLOBAL, LOCAL
+    }
 }
