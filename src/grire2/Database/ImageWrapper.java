@@ -17,5 +17,48 @@
  */
 package grire2.Database;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ImageWrapper {
+
+
+    private File imgFile;
+
+    public ImageWrapper() {
+    }
+
+    public ImageWrapper(File imgFile, String Id) {
+        this.imgFile = imgFile;
+        this.Id=Id;
+        classes=new ArrayList<>();
+    }
+
+    public ImageWrapper(File imgFile, String Id, List<String> classes) {
+        this.imgFile = imgFile;
+        this.classes = classes;
+        this.Id=Id;
+    }
+
+    private List<String> classes;
+    private String Id;
+
+
+    public File getImageFile() {
+        return imgFile;
+    }
+
+    public List<String> getClasses() {
+        return classes;
+    }
+
+    public void setClasses(List<String> ids) {
+        this.classes=ids;
+    }
+
+    public String getId() {
+        return Id;
+    }
+
 }

@@ -63,6 +63,5 @@ public class Configuration {
         GLOBAL, BAG_OF_VISUAL_WORDS
     }
 
-
 }
 
