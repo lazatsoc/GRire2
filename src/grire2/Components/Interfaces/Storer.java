@@ -13,18 +13,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *  
- * Copyright (C) 2012 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
+ * Copyright (C) 2014 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
  */
+package grire2.Components.Interfaces;
 
-package grire2.Settings.Interfaces;
+import java.util.*;
+
+public abstract class Storer implements GRirePlugin{
+
+    public abstract Map getMap(String name);
+    public abstract Set getSet(String name);
+    public abstract List getList(String name);
 
 
-public abstract class SimilarityMeasure implements GRirePlugin {
-
-    public abstract float calculate(float[] qv, float[] v);
-    public abstract SimilarityType getType();
-
-    public enum SimilarityType{
-        DISTANCE, SIMILARITY
-    }
+    private static Set<Class> allowedKeys=new HashSet<>(Arrays.asList(
+            String.class));
+    private static Set<Class> allowdValues=new HashSet<>(Arrays.asList(
+            Float[].class
+    ));
 }

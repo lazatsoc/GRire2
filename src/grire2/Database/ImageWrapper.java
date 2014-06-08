@@ -18,30 +18,24 @@
 package grire2.Database;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class ImageWrapper {
 
 
     private File imgFile;
 
-    public ImageWrapper() {
+    private ImageWrapper() {
     }
 
     public ImageWrapper(File imgFile, String Id) {
         this.imgFile = imgFile;
         this.Id=Id;
-        classes=new ArrayList<>();
+        classes=new HashMap<>();
     }
 
-    public ImageWrapper(File imgFile, String Id, List<String> classes) {
-        this.imgFile = imgFile;
-        this.classes = classes;
-        this.Id=Id;
-    }
 
-    private List<String> classes;
+    private HashMap<String, Float> classes;
     private String Id;
 
 
@@ -49,12 +43,8 @@ public class ImageWrapper {
         return imgFile;
     }
 
-    public List<String> getClasses() {
+    public HashMap<String,Float> getClasses() {
         return classes;
-    }
-
-    public void setClasses(List<String> ids) {
-        this.classes=ids;
     }
 
     public String getId() {

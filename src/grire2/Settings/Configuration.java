@@ -18,9 +18,9 @@
 
 package grire2.Settings;
 
-import grire2.Settings.Interfaces.FeatureExtractor;
-import grire2.Settings.Interfaces.SimilarityMeasure;
-import grire2.Settings.Interfaces.Storer;
+import grire2.Components.Interfaces.FeatureExtractor;
+import grire2.Components.Interfaces.SimilarityMeasure;
+import grire2.Components.Interfaces.Storer;
 
 public class Configuration {
     private String _name;
@@ -30,6 +30,8 @@ public class Configuration {
 
     private FeatureExtractor _featureExtractor;
     private SimilarityMeasure _similarityMeasure;
+
+    private Configuration(){}
 
     public Configuration(String _name, Storer _storer, FeatureExtractor _featureExtractor, SimilarityMeasure _similarityMeasure) {
         this._name = _name;

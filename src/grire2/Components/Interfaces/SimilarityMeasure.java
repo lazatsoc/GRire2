@@ -12,26 +12,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Copyright (C) 2013 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
+ *  
+ * Copyright (C) 2012 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
  */
-package grire2.Settings.Interfaces;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
+package grire2.Components.Interfaces;
 
 
-public abstract class FeatureExtractor implements GRirePlugin {
-    private FeatureType _type;
+public abstract class SimilarityMeasure implements GRirePlugin {
 
-    public abstract float[][] extract(File img);
-    public abstract float[][] extract(BufferedImage img);
+    public abstract float calculate(float[] qv, float[] v);
+    public abstract SimilarityType getType();
 
-    public FeatureType getType() {
-        return _type;
-    }
-
-    public enum FeatureType {
-        GLOBAL, LOCAL
+    public enum SimilarityType{
+        DISTANCE, SIMILARITY
     }
 }

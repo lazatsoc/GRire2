@@ -64,7 +64,7 @@ public class Database implements Iterable<ImageWrapper>{
         String[] parts;
         while ((line = br.readLine()) != null) {
             parts=line.split(" ");
-            if (parts[3].equals("1")) db.get(parts[2]).getClasses().add(parts[0]);
+            if (!parts[3].equals("0")) db.get(parts[2]).getClasses().put(parts[0], Float.parseFloat(parts[3]));
         }
         br.close();
         return db;

@@ -15,7 +15,7 @@
  *  
  * Copyright (C) 2013 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
  */
-package grire2.Settings.Interfaces;
+package grire2.Components.Interfaces;
 
 import javafx.concurrent.Task;
 import net.xeoh.plugins.base.Plugin;

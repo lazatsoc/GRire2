@@ -12,11 +12,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
- * Copyright (C) 2014 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
+ *
+ * Copyright (C) 2013 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
  */
-package grire2.Settings.Interfaces;
+package grire2.Components.Interfaces;
 
-public abstract class Storer implements GRirePlugin{
+import grire2.Database.ImageWrapper;
 
+
+public abstract class FeatureExtractor implements GRirePlugin {
+    private FeatureType _type;
+
+    public abstract float[][] extract(ImageWrapper img);
+
+    public FeatureType getType() {
+        return _type;
+    }
+
+    public enum FeatureType {
+        GLOBAL, LOCAL
+    }
 }
