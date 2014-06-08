@@ -15,50 +15,40 @@
  *
  * Copyright (C) 2013 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
  */
-package grire2.Components.Storers;
+package grire2.Components.SimilarityMeasures;
 
-import grire2.Components.Interfaces.Storer;
+import grire2.Components.Interfaces.SimilarityMeasure;
 import javafx.concurrent.Task;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class InMemoryStorer extends Storer {
-
-    private HashMap<String,List> lists=new HashMap<>();
-    private HashMap<String,Set> sets=new HashMap<>();
-    private HashMap<String,Map> maps=new HashMap<>();
-
+public class SquaredEuclideanSimilarity extends SimilarityMeasure {
     @Override
-    public Map getMap(String name) {
-        if (maps.containsKey(name)) return maps.get(name);
-        else{
-            Map map=new Hashtable<>();
-            maps.put(name, map);
-            return map;
+    public float calculate(float[][] qv, float[][] v) {
+        List<float[]> qvList = Arrays.asList(qv);
+        List<float[]> vList = Arrays.asList(v);
+
+        double ret = qvList.stream().map(qd-> vList.stream().map(vd->calculateEucl(qd,vd)).min(Float::compare))
+                .collect(Collectors.summingDouble(x->x.get()));
+        return (float) ret;
+    }
+
+    protected float calculateEucl(float[] v1, float[] v2){
+        float sum=0;
+        for (int i=0;i<v1.length;i++) {
+            float v = v1[i] - v2[i];
+            sum += v * v;
         }
+        return sum;
     }
 
     @Override
-    public Set getSet(String name) {
-        if (sets.containsKey(name)) return sets.get(name);
-        else {
-            Set set=new HashSet<>();
-            sets.put(name,set);
-            return set;
-        }
+    public SimilarityType getType() {
+        return null;
     }
 
-    @Override
-    public List getList(String name) {
-        if (lists.containsKey(name)) return lists.get(name);
-        else {
-            List list=new ArrayList<>();
-            lists.put(name,list);
-            return list;
-        }
-    }
-
-    //GrirePlugin Methods
     @Override
     public Task setUp(Object... args) throws Exception {
         return null;

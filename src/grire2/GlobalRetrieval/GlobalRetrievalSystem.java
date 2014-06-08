@@ -18,15 +18,21 @@
 
 package grire2.GlobalRetrieval;
 
+import grire2.Components.FeatureExtractors.CEDDExtractor.CEDDExtractor;
+import grire2.Components.Interfaces.SimilarityMeasure;
+import grire2.Components.SimilarityMeasures.SquaredEuclideanSimilarity;
+import grire2.Components.Storers.InMemoryStorer;
 import grire2.Database.Database;
 import grire2.Database.ImageWrapper;
 import grire2.Settings.Configuration;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GlobalRetrievalSystem {
 
-    String _name;
     Database _database;
     Configuration _configuration;
 
@@ -35,25 +41,64 @@ public class GlobalRetrievalSystem {
         this._configuration = _configuration;
     }
 
-    public GlobalRetrievalSystem(Database _database, Configuration _configuration, String _name) {
-        this._database = _database;
-        this._configuration = _configuration;
-        this._name=_name;
+    public void index(String _name) {
+        extractFeatures(_name);
     }
 
-    public void index(){
-        extractFeatures();
+    public List<RankedItem> query(String id, String indexName){
+        Map<String, float[][]> index=_configuration.getStorer().getMap(indexName+"_"+_configuration.getName()+"_features");
+        SimilarityMeasure similarityMeasure = _configuration.getSimilarityMeasure();
+        float[][] queryDescriptor = index.get(id);
+        return index.entrySet().stream()
+                .map(img->new RankedItem(img.getKey(), similarityMeasure.calculate(queryDescriptor, img.getValue())))
+                .sorted().collect(Collectors.toList());
     }
 
-    protected void extractFeatures(){
+    protected Map extractFeatures(String _name){
         Map fmap = _configuration.getStorer().getMap(
-                (_name==null?"":_name+"_") +
+                _name+"_" +
                 _configuration.getName() +
-                "features");
+                "_features");
         float[][] descs;
         for (ImageWrapper img : _database){
             descs = _configuration.getFeatureExtractor().extract(img);
             fmap.put(img.getId(), descs);
+        }
+        return fmap;
+    }
+
+    public static void main(String[] args) {
+        try {
+            Database mydb = Database.createDatabase("E:\\GRire test\\db", "E:\\GRire test\\qrels.txt", Arrays.asList(new String[]{"jpg"}));
+            Configuration configuration=new Configuration("Test", new InMemoryStorer(), new CEDDExtractor(), new SquaredEuclideanSimilarity());
+            GlobalRetrievalSystem system = new GlobalRetrievalSystem(mydb,configuration);
+            system.index("index");
+            List<RankedItem> results = system.query("1", "index");
+            for (RankedItem item : results)
+                System.out.println(item.getId());
+        }catch (Exception ex) {}
+    }
+
+    public class RankedItem implements Comparable<RankedItem>{
+        public RankedItem(String id, float rank) {
+            this.id = id;
+            this.rank = rank;
+        }
+
+        protected String id;
+        protected float rank;
+
+        public String getId(){
+            return id;
+        }
+
+        public float getRank() {
+            return rank;
+        }
+
+        @Override
+        public int compareTo(RankedItem o) {
+            return Float.compare(rank,o.getRank());
         }
     }
 }

@@ -15,50 +15,31 @@
  *
  * Copyright (C) 2013 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
  */
-package grire2.Components.Storers;
+package grire2.Components.FeatureExtractors.CEDDExtractor;
 
-import grire2.Components.Interfaces.Storer;
+import grire2.Components.Interfaces.FeatureExtractor;
+import grire2.Database.ImageWrapper;
 import javafx.concurrent.Task;
 
-import java.util.*;
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import java.util.Arrays;
 
-public class InMemoryStorer extends Storer {
+public class CEDDExtractor extends FeatureExtractor {
 
-    private HashMap<String,List> lists=new HashMap<>();
-    private HashMap<String,Set> sets=new HashMap<>();
-    private HashMap<String,Map> maps=new HashMap<>();
+    CEDD cedd = new CEDD();
 
     @Override
-    public Map getMap(String name) {
-        if (maps.containsKey(name)) return maps.get(name);
-        else{
-            Map map=new Hashtable<>();
-            maps.put(name, map);
-            return map;
+    public float[][] extract(ImageWrapper img) {
+        try {
+            cedd.extract(ImageIO.read(img.getImageFile()));
+            return new float[][] {Arrays.copyOf(cedd.data, cedd.data.length)};
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    @Override
-    public Set getSet(String name) {
-        if (sets.containsKey(name)) return sets.get(name);
-        else {
-            Set set=new HashSet<>();
-            sets.put(name,set);
-            return set;
-        }
-    }
-
-    @Override
-    public List getList(String name) {
-        if (lists.containsKey(name)) return lists.get(name);
-        else {
-            List list=new ArrayList<>();
-            lists.put(name,list);
-            return list;
-        }
-    }
-
-    //GrirePlugin Methods
     @Override
     public Task setUp(Object... args) throws Exception {
         return null;

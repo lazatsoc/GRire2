@@ -21,7 +21,7 @@ package grire2.Components.Interfaces;
 
 public abstract class SimilarityMeasure implements GRirePlugin {
 
-    public abstract float calculate(float[] qv, float[] v);
+    public abstract float calculate(float[][] qv, float[][] v);
     public abstract SimilarityType getType();
 
     public enum SimilarityType{
