@@ -13,10 +13,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2013 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
+ * Copyright (C) 2014 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
  */
 
-package grire2.GlobalRetrieval;
+package grire2.Retrieval;
 
 import grire2.Components.FeatureExtractors.CEDDExtractor.CEDDExtractor;
 import grire2.Components.Interfaces.SimilarityMeasure;
@@ -27,6 +27,7 @@ import grire2.Database.ImageWrapper;
 import grire2.Settings.Configuration;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,12 +47,15 @@ public class GlobalRetrievalSystem {
     }
 
     public List<RankedItem> query(String id, String indexName){
-        Map<String, float[][]> index=_configuration.getStorer().getMap(indexName+"_"+_configuration.getName()+"_features");
+        Map<String, float[][]> index=_configuration.getStorer()
+                .getMap(indexName + "_" + _configuration.getName() + "_features");
         SimilarityMeasure similarityMeasure = _configuration.getSimilarityMeasure();
         float[][] queryDescriptor = index.get(id);
         return index.entrySet().stream()
-                .map(img->new RankedItem(img.getKey(), similarityMeasure.calculate(queryDescriptor, img.getValue())))
-                .sorted().collect(Collectors.toList());
+                .map(img -> new RankedItem(img.getKey(), similarityMeasure.calculate(queryDescriptor, img.getValue())))
+                .sorted(similarityMeasure.getType() == SimilarityMeasure.SimilarityType.DISTANCE ?
+                        Comparator.<RankedItem>naturalOrder(): Comparator.<RankedItem>reverseOrder())
+                .collect(Collectors.toList());
     }
 
     protected Map extractFeatures(String _name){
@@ -77,28 +81,5 @@ public class GlobalRetrievalSystem {
             for (RankedItem item : results)
                 System.out.println(item.getId());
         }catch (Exception ex) {}
-    }
-
-    public class RankedItem implements Comparable<RankedItem>{
-        public RankedItem(String id, float rank) {
-            this.id = id;
-            this.rank = rank;
-        }
-
-        protected String id;
-        protected float rank;
-
-        public String getId(){
-            return id;
-        }
-
-        public float getRank() {
-            return rank;
-        }
-
-        @Override
-        public int compareTo(RankedItem o) {
-            return Float.compare(rank,o.getRank());
-        }
     }
 }

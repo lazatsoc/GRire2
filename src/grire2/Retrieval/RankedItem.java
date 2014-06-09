@@ -12,24 +12,30 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *  
+ *
  * Copyright (C) 2014 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
  */
-package grire2.Components.Interfaces;
+package grire2.Retrieval;
 
-import javafx.concurrent.Task;
-import net.xeoh.plugins.base.Plugin;
+public class RankedItem implements Comparable<RankedItem>{
+    public RankedItem(String id, float rank) {
+        this.id = id;
+        this.rank = rank;
+    }
 
+    protected String id;
+    protected float rank;
 
-public interface GRirePlugin extends Plugin {
+    public String getId(){
+        return id;
+    }
 
-    public Task setUp(Object... args) throws  Exception;
-    public Class getComponentInterface();
-    public Class[] getParameterTypes();
-    public Class[] getSetUpParameterTypes();
-    public String[] getParameterNames();
-    public String[] getSetUpParameterNames();
-    public String[] getDefaultParameterValues();
-    public String[] getDefaultSetUpParameterValues();
-    public boolean requiresSetUp();
+    public float getRank() {
+        return rank;
+    }
+
+    @Override
+    public int compareTo(RankedItem o) {
+        return Float.compare(rank,o.getRank());
+    }
 }
