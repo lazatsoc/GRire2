@@ -23,7 +23,6 @@ public abstract class Storer implements GRirePlugin{
 
     public abstract Map getMap(String name);
     public abstract Set getSet(String name);
-    public abstract List getList(String name);
 
 
     private static Set<Class> allowedKeys=new HashSet<>(Arrays.asList(
@@ -31,4 +30,9 @@ public abstract class Storer implements GRirePlugin{
     private static Set<Class> allowdValues=new HashSet<>(Arrays.asList(
             Float[].class
     ));
+
+    @Override
+    public Class getComponentInterface() {
+        return Storer.class;
+    }
 }

@@ -13,48 +13,47 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (C) 2014 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
+ * Copyright (C) 2013 Lazaros Tsochatzidis <ltsochat at ee.duth.gr>
  */
 package grire2.Components.Storers;
 
 import grire2.Components.Interfaces.Storer;
 import javafx.concurrent.Task;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
 
-import java.util.*;
+import java.io.File;
+import java.util.Map;
+import java.util.Set;
 
-public class InMemoryStorer extends Storer {
+public class MapDBStorer extends Storer {
 
-    private HashMap<String,Set> sets=new HashMap<>();
-    private HashMap<String,Map> maps=new HashMap<>();
+    DB db;
+
+    private MapDBStorer() {
+    }
+
+    public MapDBStorer(String filepath) {
+        File f=new File(filepath);
+        db = DBMaker.newFileDB(f)
+                .closeOnJvmShutdown()
+                .cacheDisable()
+                .transactionDisable()
+                .make();
+    }
 
     @Override
     public Map getMap(String name) {
-        if (maps.containsKey(name)) return maps.get(name);
-        else{
-            Map map=new Hashtable<>();
-            maps.put(name, map);
-            return map;
-        }
+        return db.getHashMap(name);
     }
 
     @Override
     public Set getSet(String name) {
-        if (sets.containsKey(name)) return sets.get(name);
-        else {
-            Set set=new HashSet<>();
-            sets.put(name,set);
-            return set;
-        }
+        return db.getHashSet(name);
     }
 
-    //GrirePlugin Methods
     @Override
     public Task setUp(Object... args) throws Exception {
-        return null;
-    }
-
-    @Override
-    public Class getComponentInterface() {
         return null;
     }
 

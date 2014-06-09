@@ -21,7 +21,7 @@ package grire2.Retrieval;
 import grire2.Components.FeatureExtractors.CEDDExtractor.CEDDExtractor;
 import grire2.Components.Interfaces.SimilarityMeasure;
 import grire2.Components.SimilarityMeasures.SquaredEuclideanSimilarity;
-import grire2.Components.Storers.InMemoryStorer;
+import grire2.Components.Storers.MapDBStorer;
 import grire2.Database.Database;
 import grire2.Database.ImageWrapper;
 import grire2.Settings.Configuration;
@@ -74,7 +74,7 @@ public class GlobalRetrievalSystem {
     public static void main(String[] args) {
         try {
             Database mydb = Database.createDatabase("E:\\GRire test\\db", "E:\\GRire test\\qrels.txt", Arrays.asList(new String[]{"jpg"}));
-            Configuration configuration=new Configuration("Test", new InMemoryStorer(), new CEDDExtractor(), new SquaredEuclideanSimilarity());
+            Configuration configuration=new Configuration("Test", new MapDBStorer("tempdb"), new CEDDExtractor(), new SquaredEuclideanSimilarity());
             GlobalRetrievalSystem system = new GlobalRetrievalSystem(mydb,configuration);
             system.index("index");
             List<RankedItem> results = system.query("1", "index");
